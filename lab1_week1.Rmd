@@ -14,3 +14,26 @@ library(sf)
 library(tmap)
 ```
 
+### Read in the data
+
+```{r}
+sf_trees <- read_csv(here('data', 'sf_trees', 'sf_trees.csv'))
+
+top_5_status <- sf_trees %>%
+  group_by(legal_status) %>%
+  summarize(tree_count = n()) %>%
+  slice_max(tree_count, n = 5) %>% #find the valuables of this variable that is maximum and get the top 5
+  arrange(-tree_count) #arrange from largest to smallest
+```
+
+### Graph
+```{r}
+ggplot(data = top_5_status,
+       aes(x = fct_reorder(legal_status, tree_count), # we are rearranging our x-axis to be tree count instead of the legal status
+           y = tree_count)) +
+  geom_col() +
+  labs(y = 'Tree count', x = 'Legal Status') +
+  coord_flip() +
+  theme_minimal()
+```
+
