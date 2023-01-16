@@ -37,3 +37,33 @@ ggplot(data = top_5_status,
   theme_minimal()
 ```
 
+### Keep observations where legal status is "Permitted site" and caretaker is "MTA"
+
+```{r}
+sf_trees$legal_status %>% unique() #this tells u the way its written, always follow it!
+permitted_mta <- sf_trees %>%
+  filter(legal_status == "Permitted Site" & caretaker == "MTA")
+```
+
+```{r}
+blackwood_acacia <- sf_trees %>%
+  filter(str_detect(species, "Blackwood Acacia")) %>%
+  select(legal_status, date, latitude, longitude)
+
+### make a plot of SF Acacia
+ggplot(data = blackwood_acacia, aes(x = longitude, y = latitude)) +
+  geom_point()
+```
+
+### Use tidyr::separate() to separate one column into multiple, and tidyr::unite() to rejoin
+```{r}
+# separate the species name and common name 
+sf_trees_sep <- sf_trees %>%
+  separate(species, into = c("spp_scientific", "spp_common"), sep = "::")
+
+sf_trees_unite <- sf_trees %>%
+  unite("id_status", tree_id:species, sep = '_NEW_')
+```
+
+
+
